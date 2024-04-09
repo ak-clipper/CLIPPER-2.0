@@ -1,3 +1,4 @@
+pycairo>=1.20.0
 biopython==1.81
 dna-features-viewer==3.1.2
 gprofiler-official==1.0.0
