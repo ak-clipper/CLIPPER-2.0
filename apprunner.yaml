@@ -8,10 +8,13 @@ build:
       - bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
       - rm -rf ~/miniconda3/miniconda.sh
     build:
-      - pip3 install pipenv
-      - pipenv install
       - ~/miniconda3/bin/conda init bash
       - ~/miniconda3/bin/conda init zsh
+      - conda create -n clipper python=3.11.3
+      - conda activate clipper
+      - conda install -c conda-forge pymol-open-source
+      - conda install --channel conda-forge pygraphviz
+      - pip install -r requirements.txt
 run:
   runtime-version: 3.11
   pre-run:
