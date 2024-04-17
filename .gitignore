@@ -2,3 +2,6 @@
 .conda
 clipper/__pycache__/
 clipper/bin/__pycache__
+
+clipper/log/
+clipper/results/
