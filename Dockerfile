@@ -13,7 +13,9 @@ ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 WORKDIR /app
 COPY ./requirements.txt .
 
+RUN conda install -c conda-forge pymol-open-source
 RUN conda install -y -c conda-forge pycairo
+RUN conda install --channel conda-forge pygraphviz
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
@@ -23,8 +25,13 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     --mount=type=bind,source=requirements.txt,target=requirements.txt \
     python3 -m pip install -r requirements.txt
 
-COPY . .
+COPY clipper/*.* clipper/
+COPY clipper/bin/ clipper/bin/
+COPY clipper/static/ clipper/static/
+COPY clipper/templates/ clipper/templates/
+COPY clipper/data/credentials.json clipper/data/
 
+# Expose port
 EXPOSE 5000
 
 
