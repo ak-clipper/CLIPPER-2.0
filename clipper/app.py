@@ -44,10 +44,10 @@ def start_new_job():
 
     with open(data_path, 'rb') as fh:
         dic = pickle.load(fh)
-    
+
     jobid = dic['jobid']
     dic['jobid'] += 1
-    
+
     with open(data_path, 'wb') as fh:
         pickle.dump(dic, fh)
 
@@ -68,21 +68,21 @@ def get_new_job_details(jobid, upload_folder):
         input_filename = secure_filename(input_file.filename)
         input_file.save(os.path.join(upload_folder, input_filename))
         session['infile'] = input_filename
-        
+
         if cond_file and allowed_file(cond_file.filename):
             cond_filename = secure_filename(cond_file.filename)
             cond_file.save(os.path.join(upload_folder, cond_filename))
             session['conditionfile'] = cond_filename
         else:
             session['conditionfile'] = None
-        
+
         if prot_file and allowed_file(prot_file.filename):
             prot_filename = secure_filename(prot_file.filename)
             prot_file.save(os.path.join(upload_folder, prot_filename))
             session['proteasefile'] = prot_filename
         else:
             session['proteasefile'] = None
-        
+
         session['jobid'] = jobid
         session['form'] = request.form
 
@@ -96,7 +96,7 @@ def get_new_job_details(jobid, upload_folder):
 def submission(jobid):
 
     filename = session['infile']
-    
+
     return render_template('submission.html', jobid=jobid, filename=filename)
 
 
@@ -137,7 +137,7 @@ def download_results(jobid):
         session['error'] = err
         traceback.print_exc()
         return redirect(url_for('error', jobid=jobid))
-    
+
     except Exception as err:
         print(f'Other error: {err}')
         session['error'] = err
@@ -215,8 +215,8 @@ def create_arguments(jobid):
     formatted_timestamp = timestamp.strftime(format="%A %B %d %Y, %H:%M:%S")
     logging.basicConfig(filename=logfile, filemode="w", level=logging.INFO)
     logging.info(f"Annotator started, {formatted_timestamp}")
-  
-    
+
+
     try:
         print("I'M HERE IN CREATE ARGUMENTS")
         arguments = {
@@ -234,8 +234,8 @@ def create_arguments(jobid):
                     'threadingcores': 'max',
                     'conditionfile': cond_file,
                     'proteasefile': prot_file,
-                    'stat': session['form']['statistic'], 
-                    'stat_pairwise': session['form']['stat_pairwise'], 
+                    'stat': session['form']['statistic'],
+                    'stat_pairwise': session['form']['stat_pairwise'],
                     'significance': session['form']['significance'],
                     'multipletesting': session['form']['multipletesting'],
                     'multipletestingmethod': 'fdr_bh',
@@ -263,9 +263,9 @@ def create_arguments(jobid):
         print(f'Other error: {err}')
         traceback.print_exc()
 
-    
+
 
     return arguments
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')

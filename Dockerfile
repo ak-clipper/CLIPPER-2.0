@@ -10,6 +10,21 @@ FROM continuumio/miniconda3:latest
 
 WORKDIR /app
 
+# Create a non-privileged user that the app will run under.
+# See https://docs.docker.com/go/dockerfile-user-best-practices/
+ARG UID=10001
+#RUN adduser \
+#    --disabled-password \
+#    --gecos "" \
+#    --home "/app" \
+#    --shell "/sbin/nologin" \
+#    --no-create-home \
+#    --uid "${UID}" \
+#   appuser
+
+RUN useradd -m -r appuser && \
+    chown appuser /app
+
 RUN conda install -y -c conda-forge pycairo && \
  #   conda install -c conda-forge pymol-open-source && \
     conda install --channel conda-forge pygraphviz
@@ -24,11 +39,12 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     --mount=type=bind,source=requirements.txt,target=requirements.txt \
     python3 -m pip install -r requirements.txt
 
-COPY clipper/*.* clipper/
-COPY clipper/bin/ clipper/bin/
-COPY clipper/static/ clipper/static/
-COPY clipper/templates/ clipper/templates/
-COPY clipper/data/credentials.json clipper/data/
+COPY clipper/ clipper/
+#COPY clipper/*.* clipper/
+#COPY clipper/bin/ clipper/bin/
+#COPY clipper/static/ clipper/static/
+#COPY clipper/templates/ clipper/templates/
+#COPY clipper/data/credentials.json clipper/data/
 
 ARG PYTHON_VERSION=3.11
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
@@ -38,20 +54,8 @@ ENV PYTHONUNBUFFERED=1
 # Expose port
 EXPOSE 5000
 
-# Create a non-privileged user that the app will run under.
-# See https://docs.docker.com/go/dockerfile-user-best-practices/
-ARG UID=10001
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/app" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid "${UID}" \
-   appuser
-
 # Switch to the non-privileged user to run the application.
 USER appuser
 
 # Run the application.
-#CMD ["python3",  "clipper/app.py"]
+CMD ["python3",  "clipper/app.py"]
