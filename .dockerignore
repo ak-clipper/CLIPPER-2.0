@@ -32,6 +32,6 @@
 **/values.dev.yaml
 LICENSE
 README.md
-**/log/*
-**/results/*
-**/upload/*
+#**/log/*
+#**/results/*
+#**/upload/*
