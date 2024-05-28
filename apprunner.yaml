@@ -1,0 +1,27 @@
+version: 1.0
+runtime: python311
+build:
+  commands:
+    pre-build:
+      - mkdir -p ~/miniconda3
+      - wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+      - bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+      - rm -rf ~/miniconda3/miniconda.sh
+    build:
+      - ~/miniconda3/bin/conda init bash
+      - ~/miniconda3/bin/conda init zsh
+      - ~/miniconda3/bin/conda create -n clipper python=3.11.3
+      - ~/miniconda3/bin/conda env list
+      - ~/miniconda3/bin/conda activate /root/miniconda3/envs/clipper
+      - ~/miniconda3/bin/conda install -c conda-forge pycairo
+      - pip3 install -r requirements.txt
+run:
+  runtime-version: 3.11
+  pre-run:
+    - pip3 install pipenv
+    - pipenv install
+  command: ./clipper/python3 app.py
+  network:
+    port: 8080
+    env: CLIPPER_PORT
+
