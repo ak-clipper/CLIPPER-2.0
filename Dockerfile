@@ -19,7 +19,9 @@ COPY requirements.txt ./
 
 RUN --mount=type=cache,target=/root/.cache/pip3 \
     --mount=type=bind,source=requirements.txt,target=requirements.txt \
-    pip3 install -r requirements.txt
+    python -m ensurepip --upgrade && \
+    python3 -m pip install --upgrade setuptools && \
+    python3 -m pip install -r requirements.txt
 
 COPY clipper/ clipper/
 
