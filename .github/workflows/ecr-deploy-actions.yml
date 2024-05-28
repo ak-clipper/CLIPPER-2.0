@@ -1,0 +1,34 @@
+name: Docker Build and AWS ECR Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+      with:
+        registry: public.ecr.aws/p9g1p6y0/clipper-public
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        region: eu-central-1
+
+    - name: Build Docker image
+      run: docker build -t clipper .
+
+    - name: Tag Docker image
+      run: docker tag clipper:latest 058264536995.dkr.ecr.eu-central-1.amazonaws.com/clipper:latest
+
+    - name: Push Docker image to ECR
+      run: docker push 058264536995.dkr.ecr.eu-central-1.amazonaws.com/clipper:latest
+
