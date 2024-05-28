@@ -5,7 +5,7 @@ FROM continuumio/miniconda3:latest
 WORKDIR /clipper
 
 RUN useradd -m -r appuser && \
-    chown appuser /app
+    chown appuser /clipper
 
 RUN conda install -y -c conda-forge pycairo && \
  #   conda install -c conda-forge pymol-open-source && \
