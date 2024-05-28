@@ -17,9 +17,9 @@ RUN conda install -y -c conda-forge pycairo && \
 # into this layer.
 COPY requirements.txt ./
 
-RUN --mount=type=cache,target=/root/.cache/pip \
+RUN --mount=type=cache,target=/root/.cache/pip3 \
     --mount=type=bind,source=requirements.txt,target=requirements.txt \
-    python3 -m pip install -r requirements.txt
+    pip3 install -r requirements.txt
 
 COPY clipper/ clipper/
 
